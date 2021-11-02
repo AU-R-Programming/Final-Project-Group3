@@ -1,0 +1,54 @@
+---
+title: "Final-Project-Group3"
+author: "John M. Musah & Alan R. Galloway"
+date: "11/1/2021"
+output: html_document
+---
+
+
+
+#LINEAR REGRESSION
+
+```{r setup, include=FALSE}
+
+```
+
+
+
+
+
+
+
+
+#THE R PACKAGE
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
