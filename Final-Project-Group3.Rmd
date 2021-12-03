@@ -35,7 +35,7 @@ coeff_beta <- function (Dependent, Independent) {
   Dependent <- as.vector(Dependent)
   Independent <- as.matrix(cbind(1,Independent))
   
-  beta <- ginv(t(Independent)%*%Independent)%*%t(Independent)%*%Dependent
+  beta <- solve(t(Independent)%*%Independent)%*%t(Independent)%*%Dependent
   
   return(beta)
 
@@ -94,13 +94,24 @@ coeff_ci <- function (Dependent, Independent, alpha = 0.05) {
   
   #quant
   quant <- 1 - alpha/2
+  
+  a <- beta - qnorm(p = quant)
+  a <- as.numeric(a)
+  
+  c <- sqrt(var.beta)
+  c <- t(b)
+  c <- as.numeric(b)
+  
+  d <- beta + qnorm(p = quant)
+  d <- as.matrix(d)
+  d <- as.numeric(d)
   #nonconforming arrays?
-  ci.beta <- c(beta - qnorm(p = quant)*sqrt(var.beta), beta + 
-                 qnorm(p = quant)*sqrt(var.beta))
+  ci.beta <- c(a%*%c, d%*%c)
   
   return(ci.beta)
 }
  
+coeff_ci(USArrests$Murder,USArrests$UrbanPop)
 ```
 
 
