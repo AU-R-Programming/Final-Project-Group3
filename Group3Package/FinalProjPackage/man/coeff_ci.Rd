@@ -20,7 +20,7 @@ A \code{list} containing the following attributes:
 }
 }
 \description{
-We create a function of the OLS estimator of the coefficients called beta_hats.
+A Confidence interval for the value beta estimated.
 }
 \examples{
 data("USArrests")
