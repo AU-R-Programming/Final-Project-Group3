@@ -29,7 +29,7 @@ coeff_beta <- function (Dependent, Independent) {
 
 #' @title Linear Model Function-group3
 #'
-#' @description We create a function of the OLS estimator of the coefficients called beta_hats.
+#' @description A Confidence interval for the value beta estimated.
 #' @param Dependent A \code{vector} with the values for the dependent variable (or outcome variable).
 #' @param Independent A \code{matrix} with the values for the independent variable.
 #' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
