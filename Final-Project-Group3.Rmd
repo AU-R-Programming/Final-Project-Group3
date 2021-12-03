@@ -4,74 +4,87 @@ author: "John M. Musah & Alan R. Galloway"
 date: "11/1/2021"
 output: html_document
 ---
+# Package Details
+Our package is uploaded to GitHub publicly and is available for download in the AU-R-Programming repository with our repo being named  <br />  Final-Project-Group3.
+<br />
+<br />
+You can directly download the package with devtools installed using:
+<br />
+<br />
+devtools::install_github('AU-R-Programming/Final-Project-Group3/Group3Package/FinalProjPackage')
+<br />
+<br />
+Help documentation is available for each function after the package is installed via:
+<br />
+<br />
+?coeff_beta
+<br />
+?coeff_ci
+<br />
+?coeff_rsquared
+<br />
+?coeff_mallows_Cp
+<br />
+?coeff_ftest
+<br />
+?coeff_plot
+<br />
+<br />
+All functions in the R-Markdown file contain their description used for package creation/help documentation, and below the function is a call to it showing an example output using the USAressts data set. 
 
-
-
-# LINEAR REGRESSION
-
-# estimating beta
+# Beta Estimation
 ```{r}
-#' @title Least Square Estimator-group3 
+#' @title Function for Beta Estimator
 #'
-#' @description We create a function of the OLS estimator of the coefficients called beta_hats. 
+#' @description We create a function of the OLS estimator of the coefficients called coeff_beta.
 #' @param Dependent A \code{vector} with the values for the dependent variable (or outcome variable).
 #' @param Independent A \code{matrix} with the values for the independent variable.
 #' @return A \code{numeric}.
+#'  \describe{
+#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
+#' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
-#' Using data("USArrests")
-#' coeff_lm(USArrests$Murder,USArrests$UrbanPop)
-
-#library(MASS)
-
+#' data("USArrests")
+#' coeff_beta(USArrests$Murder,USArrests$UrbanPop)
 coeff_beta <- function (Dependent, Independent) {
   
-  library(MASS)
-  #-------------------------------- preamble -------------------------------------
-  # in case user gets something that is not a vector for 'Dependent'
-  #  or a matrix for 'Independent', coerce data:
   Dependent <- as.vector(Dependent)
+  #cbind to add a column of ones at the front.
   Independent <- as.matrix(cbind(1,Independent))
   
   beta <- solve(t(Independent)%*%Independent)%*%t(Independent)%*%Dependent
   
   return(beta)
 
- 
 }
-
+#example
 coeff_beta(USArrests$Murder,USArrests$UrbanPop)
 
 ```
 
 
 
-# confidence interval
-```{r}
+# Confidence Intervals
+```{r, warning=FALSE}
 #' @title Linear Model Function-group3
 #'
-#' @description We create a function of the OLS estimator of the coefficients called beta_hats. 
+#' @description A Confidence interval for the value beta estimated.
 #' @param Dependent A \code{vector} with the values for the dependent variable (or outcome variable).
 #' @param Independent A \code{matrix} with the values for the independent variable.
-#' @param Beta A \code{matrix} that can be calculated using \code{coeff_lm} function.!
 #' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
-#' @param method A \code{string} that defines the method used. Options are "Asymptotic" and "Bootstrap", accepts minor misspellings with a warning - which can be both good and bad.
 #' @return A \code{list} containing the following attributes:
 #' \describe{
-#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
-#'      \item{sigma2}{explanation}
-#'      \item{variance_beta}{explanation}
-#'      \item{ci}{explanation}
+#'      \item{ci.beta}{confidence interval for the estimated beta.}
 #' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
-#' Using data("USArrests")
-#' coeff_lm(USArrests$Murder,USArrests$UrbanPop)
-
+#' data("USArrests")
+#' coeff_ci(USArrests$Murder,USArrests$UrbanPop)
 coeff_ci <- function (Dependent, Independent, alpha = 0.05) {
   
   beta <- coeff_beta(USArrests$Murder, USArrests$UrbanPop)
@@ -105,7 +118,7 @@ coeff_ci <- function (Dependent, Independent, alpha = 0.05) {
   d <- beta + qnorm(p = quant)
   d <- as.matrix(d)
   d <- as.numeric(d)
-  #nonconforming arrays?
+  
   ci.beta <- c(a%*%c, d%*%c)
   
   return(ci.beta)
@@ -116,30 +129,26 @@ coeff_ci(USArrests$Murder,USArrests$UrbanPop)
 
 
 
-# f-test
+# F-Test
 ```{r}
-#' @title Linear Model Function-group3
+#' @title Function for F-test -group3
 #'
-#' @description Function that 
+#' @description Function that calculates the F-test
 #' @param Dependent A \code{vector} with the values for the dependent variable (also called outcome).
-#' @param Independent A \code{matrix} with the values for the independent variable (also called predictors, or explanatory variable).
-#' @param Beta A \code{matrix} that can be calculated using \code{coeff_lm} function.!
-#' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
-#' @param method A \code{string} that defines the method used. Options are "Asymptotic" and "Bootstrap", accepts minor misspellings with a warning - which can be both good and bad.
+#' @param Independent A \code{matrix} with the values for the independent variable.
 #' @return A \code{list} containing the following attributes:
 #' \describe{
-#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
-#'      \item{sigma2}{explanation}
-#'      \item{variance_beta}{explanation}
-#'      \item{ci}{explanation}
+#'      \item{f-stat}{value for f_star}
+#'      \item{DFM}{Degrees of freedom}
+#'      \item{DFE}{p -1}
+#'      \item{f_prob}{f's p-value}
 #' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
-#' Using data("USArrests")
-#' coeff_lm(USArrests$Murder,USArrests$UrbanPop)
-
+#' data("USArrests")
+#' coeff_ftest(USArrests$Murder,USArrests$UrbanPop)
 coeff_ftest <- function (Dependent, Independent) {
   
    #--------------------------------------------------------------------------
@@ -195,31 +204,23 @@ coeff_ftest(USArrests$Murder,USArrests$UrbanPop)
 
 
 
-# r-squared
+# R-Squared
 ```{r}
-#' @title functon for r squared predicted error-group3
+#' @title Function for R Squared
 #'
-#' @description Function that 
+#' @description Function that calculates the R squared value
 #' @param Dependent A \code{vector} with the values for the dependent variable (also called outcome).
-#' @param Independent A \code{matrix} with the values for the independent variable (also called predictors, or explanatory variable).
-#' @param Beta A \code{matrix} that can be calculated using \code{coeff_lm} function.!
-#' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
-#' @param method A \code{string} that defines the method used. Options are "Asymptotic" and "Bootstrap", accepts minor misspellings with a warning - which can be both good and bad.
+#' @param Independent A \code{matrix} with the values for the independent variable.
 #' @return A \code{list} containing the following attributes:
 #' \describe{
-#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
-#'      \item{sigma2}{explanation}
-#'      \item{variance_beta}{explanation}
-#'      \item{ci}{explanation}
+#'      \item{r_squared}{gets the r squared value}
 #' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
-#' Using data("USArrests")
-#' coeff_lm(USArrests$Murder,USArrests$UrbanPop)
-
-
+#' data("USArrests")
+#' coeff_rsquared(USArrests$Murder,USArrests$UrbanPop)
 coeff_rsquared <- function (Dependent, Independent) {
   
   #--------------------------------------------------------------------------
@@ -240,9 +241,6 @@ coeff_rsquared <- function (Dependent, Independent) {
   y_hat <- Ind%*% as.matrix(b)
   fit <- Ind%*%as.matrix(b)
   
-  #--------------------------------------------------------------------------
-  # Define base and dummy parameters:
-  
   SSE <- sum((Dependent - y_hat)^2)
   SST <- sum((Dependent - sample_mean)^2)
 
@@ -258,27 +256,21 @@ coeff_rsquared(USArrests$Murder,USArrests$UrbanPop)
 
 # mallows cp
 ```{r}
-#' @title functon for r squared predicted error-group3
+#' @title Function for Mallows Cp-group3
 #'
-#' @description Function that 
+#' @description Function that calculates Mallows Cp
 #' @param Dependent A \code{vector} with the values for the dependent variable (also called outcome).
-#' @param Independent A \code{matrix} with the values for the independent variable (also called predictors, or explanatory variable).
-#' @param Beta A \code{matrix} that can be calculated using \code{coeff_lm} function.!
-#' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
-#' @param method A \code{string} that defines the method used. Options are "Asymptotic" and "Bootstrap", accepts minor misspellings with a warning - which can be both good and bad.
+#' @param Independent A \code{matrix} with the values for the independent variable.
 #' @return A \code{list} containing the following attributes:
 #' \describe{
-#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
-#'      \item{sigma2}{explanation}
-#'      \item{variance_beta}{explanation}
-#'      \item{ci}{explanation}
+#'      \item{mallows}{value for Mallows Cp}
 #' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
-#' Using data("USArrests")
-#' coeff_lm(USArrests$Murder,USArrests$UrbanPop)
+#' data("USArrests")
+#' coeff_mallows_Cp(USArrests$Murder,USArrests$UrbanPop)
 
 
 coeff_mallows_Cp <- function (Dependent, Independent) {
@@ -334,32 +326,18 @@ coeff_mallows_Cp(USArrests$Murder,USArrests$UrbanPop)
 
 # plot
 ```{r}
-#' @title Plot function for coeff lm package-group3
+#' @title Plot function for package-group3
 #'
-#' @description Function that 
+#' @description Function that creates the 3 required plots
 #' @param Dependent A \code{vector} with the values for the dependent variable (also called outcome).
-#' @param Independent A \code{matrix} with the values for the independent variable (also called predictors, or explanatory variable).
-#' @param Beta A \code{matrix} that can be calculated using \code{coeff_lm} function.!
-#' @param alpha A \code{numeric} (double) that sets the alpha coefficient to be used. Has to be between 0 and 1.
-#' @param method A \code{string} that defines the method used. Options are "Asymptotic" and "Bootstrap", accepts minor misspellings with a warning - which can be both good and bad.
+#' @param Independent A \code{matrix} with the values for the independent variable.
 #' @return A \code{list} containing the following attributes:
-#' \describe{
-#'      \item{beta}{Estimated coefficients, Linear Regression Model.}
-#'      \item{sigma2}{explanation}
-#'      \item{variance_beta}{explanation}
-#'      \item{ci}{explanation}
-#' }
 #' @author John M. Musah & Alan R. Galloway
-#' @importFrom 
+#' @importFrom
 #' @export
 #' @examples
 #' data("USArrests")
 #' coeff_plot(USArrests$Murder,USArrests$UrbanPop)
-#' 
-#' The actual function begins therefrom:
-
-
-
 
 coeff_plot <- function (Dependent, Independent) {
   #--------------------------------------------------------------------------
@@ -397,11 +375,13 @@ coeff_plot <- function (Dependent, Independent) {
   title(line = -2)
   
 }
+
+coeff_plot(USArrests$Murder,USArrests$UrbanPop)
 ```
 
 
 
-
+# For Comparing Some Of Our Values To True Values
 
 ```{r}
 Model <- lm(USArrests$Murder~ USArrests$UrbanPop)
@@ -412,30 +392,18 @@ summary(Model)
 
 
 #REFERENCES
-#https://economictheoryblog.com/2016/02/20/rebuild-ols-estimator-manually-in-r/
-#https://github.com/andrewc94/Linear-Regression-in-R
-#https://stackoverflow.com/questions/40901445/function-to-calculate-r2-r-squared-in-r
+<br />
+https://economictheoryblog.com/2016/02/20/rebuild-ols-estimator-manually-in-r/
+<br />
+https://github.com/andrewc94/Linear-Regression-in-R
+<br />
+https://stackoverflow.com/questions/40901445/function-to-calculate-r2-r-squared-in-r
+<br />
+https://smac-group.github.io/ds/section-functions.html#section-example-continued-least-squares-function
+<br />
+https://smac-group.github.io/ds/section-r-packages.html
 
 
-```{r}
-data("USArrests")
-coeff_beta(USArrests$Murder,USArrests$UrbanPop)
-#coeff_ci(USArrests$Murder,USArrests$UrbanPop)
-coeff_ftest(USArrests$Murder,USArrests$UrbanPop)
-coeff_rsquared(USArrests$Murder,USArrests$UrbanPop)
-coeff_mallows_Cp(USArrests$Murder,USArrests$UrbanPop)
-coeff_plot(USArrests$Murder,USArrests$UrbanPop)
-
-```
-
-
-
-
-
-#THE R PACKAGE
-```{r}
-
-```
 
 
 
