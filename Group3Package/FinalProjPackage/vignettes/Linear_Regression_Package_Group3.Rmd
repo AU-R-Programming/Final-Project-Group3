@@ -1,7 +1,31 @@
 ---
-title: "Final Project Vigette"
-output: html_document
+title: "Linear_Regression_Package_Group3"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Linear_Regression_Package_Group3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+Heya guys! Are you looking for some Regression Analysis?
+Then stick with us right here!
+
+Package name: **Linear_Regression_Package_Group3 (yes, no creativity!)**
+
+GitHub repository: [Group3 Github Link](https://github.com/AU-R-Programming/Final-Project-Group3)
+
+Published GitHub repository: [Group3 Github Link](https://github.com/AU-R-Programming/Final-Project-Group3)
+
+
+Our package is the implementation of the main basic functions that one would like to play around with Linear Regression. Yes! plots of residuals, F-test statistics, computation of the mean square prediction error.. P-value? Of course!.
+
+This is a group authorship. lol, talking about group, here are the authors:
+
+**John M. Musah**
+
+**Alan Galloway**
+
+**Colin Clifton**
+
 
 
 ## Linear Regression
@@ -40,6 +64,7 @@ coeff_beta <- function (Dependent, Independent) {
 ```
 
 The output of this function using the USAressts data with our Dependent variable being ('USArrests\$Murder') and our Independent variable being ('USArrests\$UrbanPop') is the following.
+
 ```{r, echo=FALSE}
 coeff_beta(USArrests$Murder,USArrests$UrbanPop)
 ```
@@ -91,6 +116,7 @@ coeff_ci <- function (Dependent, Independent, alpha = 0.05) {
 ```
 
 We use the same data as we did before with the default alpha value and we get the following:
+
 ```{r echo=FALSE, warning=FALSE}
 coeff_ci(USArrests$Murder,USArrests$UrbanPop)
 ```
